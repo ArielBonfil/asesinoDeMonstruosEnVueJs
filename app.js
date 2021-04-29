@@ -20,23 +20,72 @@ new Vue({
       this.saludJugador = 100;
       this.saludMonstruo = 100;
     },
-    atacar: function () {},
+    atacar: function () {
+      let damage = this.calcularHeridas(3, 10);
+      this.saludMonstruo -= damage;
+      this.turnos.unshift({
+        esJugador: true,
+        text: "jugador golpea al monstruo por " + damage,
+      });
+      if (this.verificarGanador()) {
+        return;
+      }
+      this.ataqueDelMonstruo;
+    },
 
-    ataqueEspecial: function () {},
+    ataqueEspecial: function () {
+      let damage = this.calcularHeridas(10, 20);
+      this.saludMonstruo -= damage;
 
-    curar: function () {},
+      if (this.verificarGanador()) {
+        return;
+      }
+      this.ataqueDelMonstruo;
+    },
+
+    curar: function () {
+      if (this.saludJugador <= 90) {
+        this.saludJugador += 10;
+      } else {
+        this.saludJugador = 100;
+      }
+      this.ataqueDelMonstruo;
+    },
 
     registrarEvento(evento) {},
     terminarPartida: function () {
       this.hayUnaPartidaEnJuego = false;
     },
 
-    ataqueDelMonstruo: function () {},
+    ataqueDelMonstruo: function () {
+      let damage = this.calcularHeridas(5, 12);
+      this.saludJugador -= damage;
+      this.turnos.unshift({
+        esJugador: false,
+        text: "monstruo golpea al jugador por " + damage,
+      });
+      this.verificarGanador;
+    },
 
-    calcularHeridas: function (rango) {
-      return 0;
+    calcularHeridas: function (min, max) {
+      return Math.max(Math.floor(Math.random() * max) + 1, min);
     },
     verificarGanador: function () {
+      if (this.saludMonstruo <= 0) {
+        if (confirm("Ganaste, queres jugar denuevo?")) {
+          this.empezarPartida();
+        } else {
+          hayUnaPartidaEnJuego = false;
+        }
+        return true;
+      } else if (this.saludJugador <= 0) {
+        if (confirm("Perdiste, queres jugar denuevo?")) {
+          this.empezarPartida;
+        } else {
+          hayUnaPartidaEnJuego = false;
+        }
+        return true;
+      }
       return false;
     },
     cssEvento(turno) {
